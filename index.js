@@ -8,6 +8,8 @@ const postRoute=require('./routes/posts');
 
 
 dotenv.config();
+app.set('port',process.env.PORT || 3000);
+
 
 //Connecto to DB
 mongoose.connect(
@@ -24,5 +26,10 @@ app.use(express.json());
 app.use('/api/user',authRoute);
 app.use('/api/posts',postRoute);
 
-app.listen(3000,() => console.log ('Server Up and running' ));
+
+
+app.listen(app.get('port'),()=>{ 
+    console.log('Server on port', app.get('port'));
+});
+// app.listen(3000,() => console.log ('Server Up and running' ));
 
