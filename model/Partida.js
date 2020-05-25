@@ -15,19 +15,13 @@ const partidaSchema = new mongoose.Schema(
             additionalProperties: false,
             items: {
                 type: Object,
-                required: ["name", "email", "isWinner"],
+                required: ["name", "isWinner"],
                 properties: {
                     name: {
                         type: String,
                         require:true,
                         min: 3,
                         max: 255
-                    },
-                    email: {
-                        type: String,
-                        required: true,
-                        min: 6,
-                        max:255
                     },
                     isWinner: {
                         type: boolean

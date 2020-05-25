@@ -1,8 +1,9 @@
 const express = require('express');
 const dataPartidas = require('../data/partida');
+const Partida = require('../model/Partida');
 const router = express.Router();
 
-router.get('/',async function(req, res, next){
+router.get('/', async function(req, res, next){
     let inventors = await dataPartidas.getPartidas();
 
     res.send(partidas);
@@ -17,10 +18,9 @@ router.get('/:id', async (req, res, next) => {
 router.post('/', async (req, res, next) =>{
     let result = await dataPartidas.pushPartida(
         {
-            value1: req.body.value1,
-            value2: req.body.valu2,
-            value3: req.body.value3,
-            value4: req.body.valu4
+            name: req.body.name,
+            players: req.body.players,
+            date: req.body.date
         }
     );
 
@@ -34,7 +34,14 @@ router.delete('/:id', async (req, res, next)=>{
 });
 
 router.put('/:id', async (req, res, next)=>{
-    let result = await dataPartidas.updatePartida(req.params.id);
+    let result = await dataPartidas.updatePartida(
+        {
+            _id: req.params.id,
+            name: req.body.name,
+            players: req.body.players,
+            date: req.body.date
+        }
+    );
 
     res.send(result);
 });
