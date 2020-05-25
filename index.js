@@ -5,6 +5,8 @@ const dotenv= require('dotenv')
 // import Routes
 const authRoute=require('./routes/auth');
 const postRoute=require('./routes/posts');
+const salaRoute=require('./routes/sala');
+
 
 
 dotenv.config();
@@ -25,6 +27,8 @@ app.use(express.json());
 
 app.use('/api/user',authRoute);
 app.use('/api/posts',postRoute);
+
+app.use('/api/sala',salaRoute);
 
 
 
