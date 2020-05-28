@@ -7,7 +7,7 @@ const partidaSchema = new mongoose.Schema(
             min: 3,
             max: 255
         },
-        players: {
+        usuarios: {
             type: Array,
             minItems: 2,
             maxItems: 4,
@@ -24,7 +24,7 @@ const partidaSchema = new mongoose.Schema(
                         max: 255
                     },
                     isWinner: {
-                        type: boolean
+                        type: Boolean
                     }
                 }
             }
