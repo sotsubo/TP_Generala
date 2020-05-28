@@ -1,4 +1,5 @@
 const connection = require("./connection");
+const Partida = require('../model/Partida');
 
 async function getPartidas(){
     const clientmongo = await connection.getConnection();
@@ -33,9 +34,9 @@ async function updatePartida(partida){
     const query = {_id: parseInt(partida._id)};
     const newvalues = {$set:
         {
-            value1: partida.value1,
-            value2: partida.value2,
-            value3: partida.value3
+            name: partida.name,
+            players: partida.players,
+            date: partida.date
         }
     };
 
