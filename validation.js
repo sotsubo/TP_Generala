@@ -9,6 +9,12 @@ const registerValidation = data => {
         name: Joi.string()
             .min(6)
             .required(),
+        lastname: Joi.string()
+            .min(6)
+            .required(),
+        username: Joi.string()
+            .min(6)
+            .required(),
         email: Joi.string()
             .min(6)
             .required()
@@ -23,10 +29,9 @@ const registerValidation = data => {
 //Register validation
 const loginValidation = data => {
     const schema={
-        email: Joi.string()
+        username: Joi.string()
             .min(6)
-            .required()
-            .email(),
+            .required(),
         password: Joi.string()
             .min(6)
             .required()
