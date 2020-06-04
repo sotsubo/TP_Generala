@@ -1,18 +1,25 @@
 const users=[];
 const salas=[{id:1,
-            sala:"river"}];
+            sala:"river",
+            users:[],
+            cantMaxUsers:4
+        }];
 
-const addUserLobby= ({id,name,lobby}) => {
+const addUserLobby= ({id,username,lobby}) => {
     // Javascript Mastery = javascriptmastery
-    name = name.trim().toLowerCase();
+    username = username.trim().toLowerCase();
     lobby = lobby.trim().toLowerCase();
-    const existingUser= users.find((user) => user.lobby === lobby && user.name === name);
+    console.log (`addUserLobby username ${username} lobby ${lobby}`);
+
+
+    const existingUser= users.find((user) => user.lobby === lobby && user.username === username);
     if (existingUser){
         return { error: 'Username is taken'};
     }
-    const user = {id,name,lobby};
+    const user = {id,username,lobby};
     users.push(user);
-    return {user } 
+    console.log ("addUserLobby users ",users);
+    return {user } ;
 }
 
 const removeUserLobby = (id) => {
@@ -24,8 +31,8 @@ const removeUserLobby = (id) => {
 }
 
 
-const getUserLobby = (id) => users.find((user) =>{console.log ("user.id" ,user.id);
-     if(user.id ===id){return user}
+const getUserLobby = (username) => users.find((user) =>{console.log ("user.username" ,user.username);
+     if(user.username ===username){return user}
     }
     );
 
@@ -33,7 +40,7 @@ const getUserLobby = (id) => users.find((user) =>{console.log ("user.id" ,user.i
 const getUsersInLobby = (lobby) => users.filter((user) => user.lobby===lobby);
 
 
-const addSalaLobby= ({id,sala,lobby}) => {
+const addSalaLobby= ({id,username,sala,lobby,cantMaxUsers}) => {
     // Javascript Mastery = javascriptmastery
     sala = sala.trim().toLowerCase();
     console.log ("addSalaLobby sala ",sala)
@@ -41,15 +48,19 @@ const addSalaLobby= ({id,sala,lobby}) => {
     if (existingSala){
         return { error: 'Sala is taken'};
     }
-    const Room= {id,sala};
+    user=getUserLobby(username);
+    console.log ("getUserLobby dentro de addSalaLobby  user ",user)
+    const users=[]
+    users.push(user)
+    const Room= {id,sala,users,cantMaxUsers};   
     salas.push(Room);
     console.log ("addSalaLobby salas ",salas)
-
     return {Room } 
 }
 
 
-const getSalasInLobby = () => { console.log ("getSalasInLobby salas", salas); return salas};
+const getSalasInLobby = () => {
+     console.log ("getSalasInLobby salas", salas); return salas};
 
 
 

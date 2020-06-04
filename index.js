@@ -5,7 +5,10 @@ const express = require('express');
 const socketio= require('socket.io');
 const http = require('http');
 const cors = require('cors')
-
+// var corsOptions = {
+//     origin: '*',
+//     optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+//   }
 const {addUser, removeUser, getUser , getUsersInRoom} = require('./users.js');
 const {addUserLobby, removeUserLobby, getUserLobby , getUsersInLobby,addSalaLobby,getSalasInLobby} = require('./lobby.js');
 
@@ -14,6 +17,9 @@ const PORT=process.env.PORT||3001;
 
 
 const app = express();
+app.use(cors());
+
+// app.use('*', cors(corsOptions));
 const server = http.createServer(app);
 const io = socketio(server);
 
@@ -66,63 +72,75 @@ app.use((req, res, next) => {
         res.send();
     });
 });
+
 io.on('connection',(socket)=>{
     console.log('We have a new connection!!!');
-    console.log(socket.id);
-    console.log("llamo a getSalas y despues hago un emit");
+    //console.log(socket.id);
+    //console.log("llamo a getSalas y despues hago un emit");
 
-    console.log(getSalasInLobby());
+    //console.log(getSalasInLobby());
     console.log("connection socket", socket.id);
 
-    io.to(socket.id).emit('lobbySala', getSalasInLobby());      
-    socket.on('joinLobby',({name,lobby}, callback) => {
-        const {error, user} = addUserLobby({id: socket.id, name , lobby});
+   // io.to(socket.id).emit('refreshSalas', getSalasInLobby());      
+ 
+    socket.on('joinLobby',({username,lobby}, callback) => {
+        // console.log('joinLobby' );
+        
+        // console.log('a: ' ,username );
+        // console.log('b: ' ,lobby );
+        const {error, user} = addUserLobby({id: socket.id, username , lobby});
         
         if(error) return  callback(error);
         
-        socket.emit('messageLobby',{user:'admin' , text:` ${user.name} , welcome to the lobby ${user.lobby}` });
+        // socket.emit('messageLobby',{user:'admin' , text:` ${user.username} , welcome to the lobby ${user.lobby}` });
 
-        socket.broadcast.to(user.lobby).emit('messageLobby' ,{user: 'admin', text: `${user.name} has joined!`});
+        // socket.broadcast.to(user.lobby).emit('messageLobby' ,{user: 'admin', text: `${user.username} has joined!`});
+        console.log('user.lobby: ', user.lobby );
+        console.log(`user  ${user} socket ${socket.id}`);
         socket.join(user.lobby);
-        io.to(user.lobby).emit('lobbyData',{lobby: user.lobby , users: getUsersInLobby(user.looby)});        
+        // io.to(socket.id).emit('lobbySala',{salas: getSalasInLobby()});    
+
+        // io.to(user.lobby).emit('lobbyData',{lobby: user.lobby , users: getUsersInLobby(user.looby)});        
 
         callback();
     });
 
-    socket.on('crearSala2',({sala,lobby}, callback) => {
+
+    socket.on('crearSala',({username,sala,lobby,cantMaxUsers}, callback) => {
         console.log('crearSala: ' ,sala )
-        const {error, salon} = addSalaLobby({id: socket.id, sala,lobby });
+        const {error, salon} = addSalaLobby({id: socket.id,username, sala,lobby,cantMaxUsers });
+        // socket.join(sala);
         console.log("crearSala socket", socket.id);
         if(error) return  callback(error);
-        console.log("llamo a getSalas y despues hago un emit");
-        io.to(socket.id).emit('lobbySala',{salas: getSalasInLobby()});    
+        console.log("llamo a getSalas y despues hago un emit refreshSalas");
+        // socket.broadcast.to(lobby).emit('refreshSalas', getSalasInLobby());   
+        io.sockets.in(lobby).emit('refreshSalas',  getSalasInLobby()  );    
+        console.log("despues refreshSalas");
 
       callback();
     });
-
     socket.on('recibi',({sala,lobby}, callback) => {
         console.log('a: ' ,sala );
         console.log('b: ' ,lobby );
 
 
-        callback();
+        callback(); 
     });
 
 
-    socket.on('crearSala',({sala,lobby}, callback) => {
-        console.log('crearSala: ' ,sala )
-        const {error, salon} = addSalaLobby({id: socket.id, sala,lobby });
+    socket.on('getSalas',({username,lobby}, callback) => {
+        console.log('getSalas' );
         
-        if(error) return  callback(error);
-        socket.join(sala);
-        console.log("socket.id ", socket.id)
-        const user= getUserLobby (socket.id);
-        console.log("user", user)
-        console.log("llamo a getSalas y despues hago un emit");
-        io.to(user.lobby).emit('lobbySala',{salas: getSalasInLobby()});        
-       // io.to(user.lobby).emit('lobbyData',{lobby: user.lobby , users: getUsersInLobby(user.looby)});        
+        console.log('a: ' ,username );
+        console.log('b: ' ,lobby );
+        io.sockets.in(lobby).emit('refreshSalas',  getSalasInLobby()  );    
+
+        // io.to(socket.id).emit('lobbySala',{salas: getSalasInLobby()});    
+
+
         callback();
     });
+
 
     socket.on('join',({name,room}, callback) => {
         const {error, user} = addUser({id: socket.id, name , room});
