@@ -22,6 +22,24 @@ const addUserLobby= ({id,username,lobby}) => {
     return {user } ;
 }
 
+const addUserSala= ({id,username,sala}) => {
+    // Javascript Mastery = javascriptmastery
+    username = username.trim().toLowerCase();
+    lobby = lobby.trim().toLowerCase();
+    console.log (`addUserSala username ${username} sala ${sala}`);
+
+
+    const existingUser= salas.find((user) => salas.sala === sala.sala && salas.users.username === username);
+    if (existingUser){
+        return { error: 'Username is already in that sala'};
+    }
+    
+    const user = getUserLobby(username);
+    
+    console.log ("addUserSala users ",users);
+    return {user } ;
+}
+
 const removeUserLobby = (id) => {
     const index =users.findIndex((user) => user.id===id);
 
