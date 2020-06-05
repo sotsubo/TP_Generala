@@ -82,12 +82,13 @@ io.on('connection',(socket)=>{
     console.log("connection socket", socket.id);
 
    // io.to(socket.id).emit('refreshSalas', getSalasInLobby());      
-   socket.on('tirardado',( callback) => {
+ socket.on('tirardado',( callback) => {
     console.log('tirardado' );
     
     callback(); 
    }
    );
+
     socket.on('joinLobby',({username,lobby}, callback) => {
         // console.log('joinLobby' );
         
