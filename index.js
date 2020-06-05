@@ -82,11 +82,13 @@ io.on('connection',(socket)=>{
     console.log("connection socket", socket.id);
 
    // io.to(socket.id).emit('refreshSalas', getSalasInLobby());      
-   socket.on('tirardado',( callback) => {
-   console.log("tirardado socket", socket.id);
+ socket.on('tirardado',( callback) => {
+    console.log('tirardado' );
+    
+    callback(); 
+   }
+   );
 
-
-       });
     socket.on('joinLobby',({username,lobby}, callback) => {
         // console.log('joinLobby' );
         
@@ -113,7 +115,7 @@ io.on('connection',(socket)=>{
     socket.on('crearSala',({username,sala,lobby,cantMaxUsers}, callback) => {
         console.log('crearSala: ' ,sala )
         const {error, salon} = addSalaLobby({id: socket.id,username, sala,lobby,cantMaxUsers });
-        // socket.join(sala);
+        socket.join(sala);
         console.log("crearSala socket", socket.id);
         if(error) return  callback(error);
         console.log("llamo a getSalas y despues hago un emit refreshSalas");

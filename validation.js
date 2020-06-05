@@ -7,13 +7,13 @@ const Joi= require('@hapi/joi');
 const registerValidation = data => {
     const schema={
         name: Joi.string()
-            .min(6)
+            .min(2)
             .required(),
         lastname: Joi.string()
-            .min(6)
+            .min(2)
             .required(),
         username: Joi.string()
-            .min(6)
+            .min(5)
             .required(),
         email: Joi.string()
             .min(6)
@@ -30,7 +30,7 @@ const registerValidation = data => {
 const loginValidation = data => {
     const schema={
         username: Joi.string()
-            .min(6)
+            .min(5)
             .required(),
         password: Joi.string()
             .min(6)
