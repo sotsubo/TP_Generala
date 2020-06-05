@@ -3,20 +3,20 @@ const userSchema =new mongoose.Schema({
     name:{
         type: String,
         require:true,
-        min: 3,
+        min: 2,
         max: 255
     },
     
     lastname:{
         type: String,
         required: true,
-        min: 6,
+        min: 2,
         max:255
     },
     username:{
             type: String,
             required: true,
-            min: 6,
+            min: 5,
             max:255
     },
     email:{
