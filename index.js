@@ -90,9 +90,9 @@ io.on('connection',(socket)=>{
    );
 
     socket.on('joinLobby',({username,lobby}, callback) => {
-        // console.log('joinLobby' );
+        console.log('joinLobby' );
         
-        // console.log('a: ' ,username );
+        console.log('username: ' ,username );
         // console.log('b: ' ,lobby );
         const {error, user} = addUserLobby({id: socket.id, username , lobby});
         
@@ -112,10 +112,11 @@ io.on('connection',(socket)=>{
     });
 
 
-    socket.on('crearSala',({username,sala,lobby,cantMaxUsers}, callback) => {
-        console.log('crearSala: ' ,sala )
-        const {error, salon} = addSalaLobby({id: socket.id,username, sala,lobby,cantMaxUsers });
-        socket.join(sala);
+    socket.on('crearSala',async({username,name,lobby,cantMaxUsers}, callback) => {
+        console.log('crearSala: ' ,name )
+        const {error, salon} = await addSalaLobby({id: socket.id,username, name,lobby,cantMaxUsers });
+        console.log("despues de addSalaLobby", salon)
+        socket.join(name);
         console.log("crearSala socket", socket.id);
         if(error) return  callback(error);
         console.log("llamo a getSalas y despues hago un emit refreshSalas");
@@ -144,6 +145,25 @@ io.on('connection',(socket)=>{
         // io.to(socket.id).emit('lobbySala',{salas: getSalasInLobby()});    
 
 
+        callback();
+    });
+
+
+    socket.on('joinSala',({username,name,lobby}, callback) => {
+        console.log('joinSala' );
+        
+        console.log('username: ' ,username );
+        console.log('name: ' ,name );
+        
+        // const {error, user} = addUser({id: socket.id, name , room});
+        
+        // if(error) return  callback(error);
+        
+        // socket.emit('message',{user:'admin' , text:` ${user.name} , welcome to the room ${user.room}` });
+
+        // socket.broadcast.to(user.room).emit('message' ,{user: 'admin', text: `${user.name} has joined!`});
+        // socket.join(user.room);
+        // io.to(user.room).emit('roomData',{room: user.room , users: getUsersInRoom(user.room)});        
         callback();
     });
 

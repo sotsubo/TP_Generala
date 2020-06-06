@@ -13,32 +13,22 @@ async function getSala(salaId){
 
 
 
-async function pushInventor(inventor){
-    const clientmongo = await conecction.getConnection();
+async function pushSala(req,res){
 
-    const result = await clientmongo.db('sample_betp2')
-        .collection('inventors')
-        .insertOne(inventor);
-    
-    return result;
-}
-
-async function pushSala(name){
-
-    console.log(`pushSala ${name}`);
     //Check if the sala exists
-    // const nameExist= await Sala.findOne({name: name});
-    // if(nameExist) return err='Sala already exists';
+    const nameExist= await Sala.findOne({name: req.body.name});
+    if(nameExist) return res.status(400).send('Sala already exists');
+    //Create a new sala
     const sala = new Sala({
-    name: name,
+    name: req.body.name,
     active: true
     });
     try{            
         const saveSala=await sala.save();
-        return saveSala;
+        return res.send({sala: sala._id});
         }
     catch(err){
-        return err;
+        return res.status(400).send(err);
     }
     
     

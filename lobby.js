@@ -1,9 +1,29 @@
+const express = require('express');
+const dataSalas = require('./data/sala');
+const Sala = require('./model/Sala');
+
 const users=[];
 const salas=[{id:1,
-            sala:"river",
+            name:"river",
             users:[],
             cantMaxUsers:4
         }];
+let url="http://localhost:3001/api/sala"
+
+let token='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZWM2ZjBjODIzOTJiNzAwNGMyM2VkMDUiLCJpYXQiOjE1OTA3MDY2ODl9.CKuaxvtahrtWTrkfBikmTvCd3E8inmoJIAl-yjjrga4';
+
+async function addSala(salaName){
+    console.log(`addSala "salaName" ${salaName}`)
+    let sala = await dataSalas.pushSala(salaName
+            );
+    // salas.push(sala);
+    // console.log ("addSala salas ",salas);
+    return {sala } ;
+        
+
+}
+
+
 
 const addUserLobby= ({id,username,lobby}) => {
     // Javascript Mastery = javascriptmastery
@@ -61,22 +81,35 @@ const getUserLobby = (username) => users.find((user) =>{console.log ("user.usern
 const getUsersInLobby = (lobby) => users.filter((user) => user.lobby===lobby);
 
 
-const addSalaLobby= ({id,username,sala,lobby,cantMaxUsers}) => {
+const addSalaLobby= async({id,username,name,lobby,cantMaxUsers}) => {
     // Javascript Mastery = javascriptmastery
-    sala = sala.trim().toLowerCase();
-    console.log ("addSalaLobby sala ",sala)
-    const existingSala= salas.find((sal) =>  sal.sala===sala);
+    name = name.trim().toLowerCase();
+    console.log ("addSalaLobby name ",name);
+    console.log ("addSalaLobby username ",username);
+
+    const existingSala= salas.find((sala) => sala.name === name);
     if (existingSala){
-        return { error: 'Sala is taken'};
+        console.log('Sala already exists');
+        return { error: 'Sala already exists'};
     }
+    
     user=getUserLobby(username);
     console.log ("getUserLobby dentro de addSalaLobby  user ",user)
     const users=[]
     users.push(user)
-    const Room= {id,sala,users,cantMaxUsers};   
-    salas.push(Room);
+    Room= await addSala(name)
+    console.log ("Room");
+    console.log (Room);
+    console.log ("Sala");
+    console.log (Room.sala._id);
+    id=Room.sala._id;
+
+    newSala= {id,name,users,cantMaxUsers};   
+    console.log ("newSala");
+    console.log (newSala);
+    salas.push(newSala);
     console.log ("addSalaLobby salas ",salas)
-    return {Room } 
+    return {newSala } 
 }
 
 
