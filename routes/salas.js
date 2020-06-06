@@ -1,5 +1,5 @@
 const express = require('express');
-const dataSalas = require('../data/sala');
+const dataSalas = require('../data/sala2');
 const Sala = require('../model/Sala');
 
 const router = express.Router();
@@ -34,7 +34,7 @@ router.get('/:id', async (req, res, next)=>{
 
 
 
-router.post('/',verify,async(req,res)=>{
+router.post('/',async(req,res)=>{
 
     let result = await dataSalas.pushSala(req,res
     );
