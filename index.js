@@ -80,9 +80,10 @@ io.on('connection',(socket)=>{
 
     //console.log(getSalasInLobby());
     console.log("connection socket", socket.id);
+    
 
    // io.to(socket.id).emit('refreshSalas', getSalasInLobby());      
- socket.on('tirardado',( callback) => {
+    socket.on('tirardado',( callback) => {
     console.log('tirardado' );
     
     callback(); 
@@ -93,21 +94,46 @@ io.on('connection',(socket)=>{
         console.log('joinLobby' );
         
         console.log('username: ' ,username );
-        // console.log('b: ' ,lobby );
-        const {error, user} = addUserLobby({id: socket.id, username , lobby});
+
+        console.log('lobby: ' ,lobby );
+        socket.emit('refreshSalas',  getSalasInLobby()  );    
         
-        if(error) return  callback(error);
+        
+        // io.to(socket.id).emit('lobbySala',{salas: getSalasInLobby()});    
+        if (username !== undefined && username !== null ) {
+        const user = addUserLobby({id: socket.id, username , lobby});
+        
+        // if(error) return  callback(error);
         
         // socket.emit('messageLobby',{user:'admin' , text:` ${user.username} , welcome to the lobby ${user.lobby}` });
 
         // socket.broadcast.to(user.lobby).emit('messageLobby' ,{user: 'admin', text: `${user.username} has joined!`});
-        console.log('user.lobby: ', user.lobby );
+        console.log("lobby " );
+        
+        
+        console.log('user.lobby: ', lobby );
         console.log(`user  ${user} socket ${socket.id}`);
-        socket.join(user.lobby);
+        
+        // io.sockets.in(lobby).emit('refreshSalas',  getSalasInLobby()  );    
+        
+        
+        // io.emit('refreshSalas',  getSalasInLobby()  );
+        socket.join('lobby');
+
+
         // io.to(socket.id).emit('lobbySala',{salas: getSalasInLobby()});    
 
-        // io.to(user.lobby).emit('lobbyData',{lobby: user.lobby , users: getUsersInLobby(user.looby)});        
 
+        // console.log('refreshSalas' );
+        // console.log('refreshSalas' ,getSalasInLobby()); 
+        // io.sockets.in('lobby').emit('refreshSalas',  getSalasInLobby()  );    
+
+        // io.emit('refreshSalas',  getSalasInLobby()  );
+            // 'lobbyData',{lobby: user.lobby , users: getUsersInLobby(user.looby)});        
+        }
+        else {
+            console.log("username is undefinded");
+        }
         callback();
     });
 
@@ -189,6 +215,7 @@ io.on('connection',(socket)=>{
         callback();
     });
     socket.on('disconnect',()=>{
+        console.log("disctonce")
         const user= removeUser(socket.id)
         if(user){
             io.to(user.room).emit('message'),{user:'admin', text: `${user.name} has left`}

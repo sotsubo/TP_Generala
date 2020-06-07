@@ -29,12 +29,28 @@ const addUserLobby= ({id,username,lobby}) => {
     // Javascript Mastery = javascriptmastery
     username = username.trim().toLowerCase();
     lobby = lobby.trim().toLowerCase();
-    console.log (`addUserLobby username ${username} lobby ${lobby}`);
+    console.log (`addUserLobby username ${username} lobby ${lobby} id ${id}`);
+    // console.log(users)
+    console.log ("addUserLobby users ",users);
 
+    console.log("existingUser");
 
-    const existingUser= users.find((user) => user.lobby === lobby && user.username === username);
+    const existingUser= users.find((user) =>{ if (user.username === username) console.log (user.username); return user});
+    console.log("existingUser", existingUser);
+        
     if (existingUser){
-        return { error: 'Username is taken'};
+
+        index = users.findIndex(user => user.username ===username);
+        console.log("index", index);
+        if(index>=0){
+            users.splice(index, 1);
+            console.log (`usuario ya existe lo borro  username ${username} lobby ${lobby}`);
+        // users.remove(function(user) { return user.username === username; })
+        // users.remove(function(el) { return el.username === username; });
+        }
+        else {
+            console.log (`no se borra nada lo borro `) 
+        }
     }
     const user = {id,username,lobby};
     users.push(user);
