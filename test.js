@@ -8,7 +8,10 @@ const salas = [
   }
 ]
 
-
+const users=   [
+  { id: 'e7WzPfGikXbddzVlAAAA', username: 'sotsubo', lobby: 'lobby' },
+  { id: '7yxrysqwN1hd7teqAAAB', username: 'sotsubo', lobby: 'lobby' }
+]
 newUser= { id: 'NdYKf3q9bfsWhN0E', username: 'sergio', lobby: 'lobby' }
 
 console.log (salas)
@@ -24,5 +27,9 @@ sa = JSON.stringify(salas);
 
 console.log (sa);
 
+username='sotsubo';
+const existingUser=users.find((user) => user.username=== username);
+console.log("existingUser",existingUser)
+// console.log()
 
 
