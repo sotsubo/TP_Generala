@@ -5,7 +5,7 @@ const router = express.Router();
 
 const verify = require('./verifyToken');
 
-router.get('/', async function(req, res, next) {
+router.get('/',verify, async function(req, res, next) {
     let partidas = await dataPartidas.getPartidas();
     res.send(partidas);
   });

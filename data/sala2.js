@@ -1,8 +1,10 @@
 // const connection = require("./connection");
 const Sala = require('../model/Sala');
+const {salaValidation, loginValidation}=require('../validation');
+
 
 async function getSalas(){
-    const collection= await Sala.find({active: true});
+    const collection= await Sala.find({isActive: true});
     return collection;
 }
 
@@ -15,24 +17,38 @@ async function getSala(salaId){
 
 async function pushSala(req,res){
 
-    //Check if the sala exists
-    const nameExist= await Sala.findOne({name: req.body.name});
-    if(nameExist) return res.status(400).send('Sala already exists');
-    //Create a new sala
+    const {error} = salaValidation(req.body);
+    if(error) return res.status(400).send(error.details[0].message);
+    //Check if user exist
+    const salaExist= await Sala.findOne({salaName: req.body.salaName, isActive:true});
+    if(salaExist) return res.status(400).send('Sala already exists');
+    //Hash passwods
+    console.log("salaName: ",req.body.salaName)
+    console.log("isActive: ",req.body.isActive)
+    console.log("players: ",req.body.players)
+    console.log("cantMaxUsers: ",req.body.cantMaxUsers)
+    //Create a new user
     const sala = new Sala({
-    name: req.body.name,
-    active: true
+        salaName: req.body.salaName,
+        isActive: req.body.isActive,
+        players: req.body.players,
+        cantMaxUsers: req.body.cantMaxUsers,
+               
+        
     });
-    try{            
-        const saveSala=await sala.save();
-        return res.send({sala: sala._id});
-        }
-    catch(err){
-        return res.status(400).send(err);
+    console.log("NewSala: ",sala)
+    // console.log("players: ",req.body.players)
+    
+    //res.send('Register')
+    try{
+        const savedSala=await sala.save();
+        res.send({sala: sala._id});
+
+    }catch(err){
+        res.status(400).send(err);
     }
-    
-    
-}
+
+};
 
 
 // try{

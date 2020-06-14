@@ -6,7 +6,7 @@ const router = express.Router();
 const verify = require('./verifyToken');
 
 /* GET salas activas listing. */
-router.get('/', async function(req, res, next) {
+router.get('/',verify, async function(req, res, next) {
   let salas = await dataSalas.getSalas();
   res.send(salas);
 });
@@ -19,44 +19,48 @@ router.get('/:id', async (req, res, next)=>{
     res.send(sala);
 });
 
-// router.post('/', async (req, res, next)=>{
-//     let result = await dataSalas.pushSala(
-//         {
-//             _id: req.body._id,
-//             first: req.body.first,
-//             last: req.body.last,
-//             year: req.body.year
-//         }
-//     );
-
-//     res.send(result)
-// });
-
-
-
 router.post('/',async(req,res)=>{
 
     let result = await dataSalas.pushSala(req,res
     );
     });
 
-// //Check if the sala exists
-// const nameExist= await Sala.findOne({name: req.body.name});
-// if(nameExist) return res.status(400).send('Sala already exists');
-// //Create a new sala
-// const sala = new Sala({
-//     name: req.body.name
+
+// router.post('/',async(req,res)=>{
+//     // Lets validate the data before we create a user
+//     console.log("req.body")
+//     console.log(req.body);
+//     const {error} = salaValidation(req.body);
+//     if(error) return res.status(400).send(error.details[0].message);
+//     //Check if user exist
+//     const salaExist= await Sala.findOne({salaName: req.body.salaName, isActive:true});
+//     if(salaExist) return res.status(400).send('Sala already exists');
+//     //Hash passwods
+//     console.log("salaName: ",req.body.salaName)
+//     console.log("isActive: ",req.body.isActive)
+//     console.log("players: ",req.body.players)
+//     //Create a new user
+//     const sala = new Sala({
+//         salaName: req.body.salaName,
+//         isActive: req.body.isActive,
+//         players: req.body.players,
+               
+        
+//     });
+//     console.log("NewSala: ",sala)
+//     // console.log("players: ",req.body.players)
+    
+//     //res.send('Register')
+//     try{
+//         const savedSala=await sala.save();
+//         res.send({sala: sala._id});
+
+//     }catch(err){
+//         res.status(400).send(err);
+//     }
+
 // });
-// try{
-//     const saveSala=await sala.save();
-//     res.send({sala: sala._id});
 
-// }catch(err){
-//     res.status(400).send(err);
-// }
-
-// }
-// );
 
 
 

@@ -31,6 +31,7 @@ const postRoute=require('./routes/posts');
 const salaRoute=require('./routes/salas');
 const partidaRoute=require('./routes/partidas');
 
+const userLobbyRoute=require('./routes/userLobby');
 
 
 dotenv.config();
@@ -55,6 +56,7 @@ app.use('/api/partida',partidaRoute);
 
 app.use('/api/sala',salaRoute);
 
+app.use('/api/userlobby',userLobbyRoute);
 
 app.use(cors());
 
@@ -96,40 +98,17 @@ io.on('connection',(socket)=>{
         console.log('username: ' ,username );
 
         console.log('lobby: ' ,lobby );
+
         socket.emit('refreshSalas',  getSalasInLobby()  );    
         
         
-        // io.to(socket.id).emit('lobbySala',{salas: getSalasInLobby()});    
         if (username !== undefined && username !== null ) {
-        const user = addUserLobby({id: socket.id, username , lobby});
+        // const user = addUserLobby({id: socket.id, username , lobby});
         
-        // if(error) return  callback(error);
-        
-        // socket.emit('messageLobby',{user:'admin' , text:` ${user.username} , welcome to the lobby ${user.lobby}` });
-
-        // socket.broadcast.to(user.lobby).emit('messageLobby' ,{user: 'admin', text: `${user.username} has joined!`});
         console.log("lobby " );
-        
-        
         console.log('user.lobby: ', lobby );
-        console.log(`user  ${user} socket ${socket.id}`);
-        
-        // io.sockets.in(lobby).emit('refreshSalas',  getSalasInLobby()  );    
-        
-        
-        // io.emit('refreshSalas',  getSalasInLobby()  );
+        console.log(`user  ${username} socket ${socket.id}`);
         socket.join('lobby');
-
-
-        // io.to(socket.id).emit('lobbySala',{salas: getSalasInLobby()});    
-
-
-        // console.log('refreshSalas' );
-        // console.log('refreshSalas' ,getSalasInLobby()); 
-        // io.sockets.in('lobby').emit('refreshSalas',  getSalasInLobby()  );    
-
-        // io.emit('refreshSalas',  getSalasInLobby()  );
-            // 'lobbyData',{lobby: user.lobby , users: getUsersInLobby(user.looby)});        
         }
         else {
             console.log("username is undefinded");
@@ -140,14 +119,17 @@ io.on('connection',(socket)=>{
 
     socket.on('crearSala',async({username,name,lobby,cantMaxUsers}, callback) => {
         console.log('crearSala: ' ,name )
-        const {error, salon} = await addSalaLobby({id: socket.id,username, name,lobby,cantMaxUsers });
-        console.log("despues de addSalaLobby", salon)
+        // const {error, salon} = await addSalaLobby({id: socket.id,username, name,lobby,cantMaxUsers });
+        // console.log("despues de addSalaLobby", salon)
         socket.join(name);
         console.log("crearSala socket", socket.id);
-        if(error) return  callback(error);
+        // if(error) return  callback(error);
         console.log("llamo a getSalas y despues hago un emit refreshSalas");
-        // socket.broadcast.to(lobby).emit('refreshSalas', getSalasInLobby());   
-        io.sockets.in(lobby).emit('refreshSalas',  getSalasInLobby()  );    
+        // socket.broadcast.to(lobby).emit('refreshSalas', getSalasInLobby());  
+        salas= await getSalasInLobby()
+        console.log("salas", salas); 
+        
+        io.sockets.in(lobby).emit('refreshSalas'  );    
         console.log("despues refreshSalas");
 
       callback();
@@ -214,8 +196,18 @@ io.on('connection',(socket)=>{
 
         callback();
     });
+    
+    socket.on('quitLobby',()=>{
+        console.log("quitLobby")
+        const user= removeUser(socket.id)
+        if(user){
+            io.to(user.room).emit('message'),{user:'admin', text: `${user.name} has left`}
+        }
+        // console.log('User has left!!!');
+
+    })
     socket.on('disconnect',()=>{
-        console.log("disctonce")
+        console.log("disconnect")
         const user= removeUser(socket.id)
         if(user){
             io.to(user.room).emit('message'),{user:'admin', text: `${user.name} has left`}
