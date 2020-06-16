@@ -60,4 +60,5 @@ async function deleteSala(salaId){
 
 }
 
+
 module.exports = {getSalas, getSala, pushSala, updateSala, deleteSala};

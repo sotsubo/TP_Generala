@@ -42,7 +42,7 @@ async function pushSala(req,res){
     //res.send('Register')
     try{
         const savedSala=await sala.save();
-        res.send({sala: sala._id});
+        res.send({sala});
 
     }catch(err){
         res.status(400).send(err);
@@ -73,16 +73,29 @@ async function updateSala(req,res){
     console.log('id', req.params.id);
     console.log('body', req.body);
     
-    const result= await Sala.findOneAndUpdate({_id: req.params.id}, req.body, {upsert: true}, function(err, doc) {
+    const result= await Sala.updateOne({_id: req.params.id}, {players:req.body.players}, {upsert: true},async function(err, doc) {
         if (err) return res.send(500, {error: err});
-        return res.send('Succesfully saved.');
+        const sala= await Sala.findOne({_id: req.params.id});
+        console.log('sala',sala)
+    
+        return res.send(sala);
     });
 }
 
 async function deleteSala(salaId){
+    
     const result= await Sala.deleteOne({_id: salaId});
     return result;
 
 }
 
-module.exports = {getSalas, getSala, pushSala, updateSala, deleteSala};
+
+async function deleteSalasAll(){
+    console.log("deleteSalasAll")
+    const result= await Sala.deleteMany({isActive: true});
+    console.log("result",result)
+
+    return result;
+
+}
+module.exports = {getSalas, getSala, pushSala, updateSala, deleteSala, deleteSalasAll};

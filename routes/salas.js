@@ -65,6 +65,7 @@ router.post('/',async(req,res)=>{
 
 
 router.put('/:id', async (req, res, next)=>{
+    console.log("update sala")
     let result = await dataSalas.updateSala(req, res
     );
 
@@ -75,5 +76,6 @@ router.delete('/:id', async (req, res, next)=>{
     let result = await dataSalas.deleteSala(req.params.id);
     res.send(result);
 });
+
 
 module.exports = router;

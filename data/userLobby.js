@@ -43,5 +43,11 @@ async function deleteUserLobby(userId){
     return result;
 
 }
+async function deleteAllUserLobby(){
+    console.log("deleteAllUserLobby" )
+    const result= await UserLooby.remove({});
+    return result;
 
-module.exports = {getUsersLobby, getUserLobby, pushUserLobby, deleteUserLobby };
+}
+
+module.exports = {getUsersLobby, getUserLobby, pushUserLobby, deleteUserLobby,deleteAllUserLobby };
