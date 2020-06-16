@@ -45,7 +45,7 @@ async function deleteUserLobby(userId){
 }
 async function deleteAllUserLobby(){
     console.log("deleteAllUserLobby" )
-    const result= await UserLooby.remove({});
+    const result= await UserLooby.deleteMany({});
     return result;
 
 }
