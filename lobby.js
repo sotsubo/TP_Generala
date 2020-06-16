@@ -129,9 +129,15 @@ const addSalaLobby= async({id,username,name,lobby,cantMaxUsers}) => {
 }
 
 
-const getSalasInLobby = () => {
-     console.log ("getSalasInLobby salas", salas); return salas};
+// const getSalasInLobby = () => {
+//      console.log ("getSalasInLobby salas", salas); return salas};
 
+// async function
+const getSalasInLobby  =async()=>{
+        const collection= await Sala.find({isActive: true});
+        return collection;
+    }
+    
 
 
 module.exports = {addUserLobby, removeUserLobby, getUserLobby, getUsersInLobby,addSalaLobby,getSalasInLobby};

@@ -2,7 +2,7 @@
 const Sala = require('../model/Sala');
 
 async function getSalas(){
-    const collection= await Sala.find({active: true});
+    const collection= await Sala.find({isActive: true});
     return collection;
 }
 
@@ -44,25 +44,6 @@ async function pushSala(name){
     
 }
 
-
-// try{
-//     const saveSala=await sala.save();
-//     res.send({sala: sala._id});
-
-// }catch(err){
-//     res.status(400).send(err);
-// }
-
-// }
-
-//     const clientmongo = await connection.getConnection();
-//     const result = await clientmongo.db("nombre_bd")
-//         .collection("nombre_collection")
-//         .insertOne(sala);
-
-//     return result;
-// }
-
 async function updateSala(req,res){
     console.log('id', req.params.id);
     console.log('body', req.body);
@@ -78,5 +59,6 @@ async function deleteSala(salaId){
     return result;
 
 }
+
 
 module.exports = {getSalas, getSala, pushSala, updateSala, deleteSala};
