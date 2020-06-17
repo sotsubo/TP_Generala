@@ -12,10 +12,10 @@ const cors = require('cors')
 const {addUser, removeUser, getUser , getUsersInRoom} = require('./users.js');
 const {addUserLobby, removeUserLobby, getUserLobby , getUsersInLobby,addSalaLobby,getSalasInLobby} = require('./lobby.js');
 const { deleteAllUserLobby} = require('./data/userLobby.js');
+// const {deleteSalasAll} = require('./data/Sala2');
 
 const dataSalas = require('./data/sala');
 const Sala = require('./model/Sala');
-const {deleteSalasAll} = require('./data/Sala2');
 const PORT=process.env.PORT||3001;
 
 
@@ -50,7 +50,7 @@ mongoose.connect(
 );
 
 function resetDB(){
-    deleteSalasAll();
+    // deleteSalasAll();
     deleteAllUserLobby();
 
 }
