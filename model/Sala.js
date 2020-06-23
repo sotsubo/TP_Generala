@@ -50,7 +50,7 @@ const salaSchema =new mongoose.Schema({
         type: Number,
         // required: true,
         max: 4,
-        min:2
+        min:1
 
 
     }

@@ -12,7 +12,7 @@ const cors = require('cors')
 const {addUser, removeUser, getUser , getUsersInRoom} = require('./users.js');
 const {addUserLobby, removeUserLobby, getUserLobby , getUsersInLobby,addSalaLobby,getSalasInLobby} = require('./lobby.js');
 const { deleteAllUserLobby} = require('./data/userLobby.js');
-// const {deleteSalasAll} = require('./data/Sala2');
+const {deleteSalasAll} = require('./data/Sala2');
 
 const dataSalas = require('./data/sala');
 const Sala = require('./model/Sala');
@@ -50,7 +50,7 @@ mongoose.connect(
 );
 
 function resetDB(){
-    // deleteSalasAll();
+    deleteSalasAll();
     deleteAllUserLobby();
 
 }
@@ -139,9 +139,10 @@ io.on('connection',(socket)=>{
         // socket.broadcast.to(lobby).emit('refreshSalas', getSalasInLobby());  
         // salas= await getSalasInLobby()
         // console.log("salas", salas); 
-        socket.broadcast.to(lobby).emit('refreshSalas',{} );
-        io.to(lobby).emit('refreshSalas',{} );
-        // emit('roomData',{room: user.room , users: getUsersInRoom(user.room)});        
+        
+        
+        // socket.broadcast.to(lobby).emit('refreshSalas',{} );
+        // io.to(lobby).emit('refreshSalas',{} );
         
         io.sockets.in(lobby).emit('refreshSalas' ,{});    
         console.log("despues refreshSalas");
@@ -164,7 +165,7 @@ io.on('connection',(socket)=>{
         
         console.log('a: ' ,username );
         console.log('b: ' ,lobby );
-        io.sockets.in(lobby).emit('refreshSalas',  getSalasInLobby()  );    
+        io.sockets.in(lobby).emit('refreshSalas'  );    
 
         // io.to(socket.id).emit('lobbySala',{salas: getSalasInLobby()});    
 
@@ -173,22 +174,49 @@ io.on('connection',(socket)=>{
     });
 
 
-    socket.on('joinSala',({username,name,lobby}, callback) => {
+    socket.on('joinSala',({username,sala,lobby}, callback) => {
         console.log('joinSala' );
         
         console.log('username: ' ,username );
-        console.log('name: ' ,name );
-        io.sockets.in(lobby).emit('refreshSalas'  );    
-        
-        // const {error, user} = addUser({id: socket.id, name , room});
-        
-        // if(error) return  callback(error);
-        
-        // socket.emit('message',{user:'admin' , text:` ${user.name} , welcome to the room ${user.room}` });
+        console.log('sala.salaName: ' ,sala.salaName );
+        console.log('sala: ' ,sala );
+        console.log('emit refreshSala' );
 
-        // socket.broadcast.to(user.room).emit('message' ,{user: 'admin', text: `${user.name} has joined!`});
-        // socket.join(user.room);
-        // io.to(user.room).emit('roomData',{room: user.room , users: getUsersInRoom(user.room)});        
+        io.sockets.in(sala.salaName).emit('refreshSala',{sala});    
+        // io.sockets.in(lobby).emit('refreshSalas');    
+        // io.sockets.in(lobby).emit('refreshSala',{sala});    
+        socket.join(sala.salaName);
+        callback();
+    });
+    
+    socket.on('leftSala',({username,sala,lobby}, callback) => {
+        console.log('leftSala' );
+        
+        console.log('username: ' ,username );
+        console.log('sala.salaName: ' ,sala.salaName );
+        console.log('sala: ' ,sala );
+        console.log('emit refreshSala' );
+        socket.leave(sala.salaName);
+
+        io.sockets.in(sala.salaName).emit('refreshSala',{sala});    
+        io.sockets.in(lobby).emit('refreshSalas'  );    
+
+        // io.sockets.in(lobby).emit('refreshSalas');    
+        // io.sockets.in(lobby).emit('refreshSala',{sala});    
+        callback();
+    });
+    socket.on('goToMatch',({username,sala,lobby}, callback) => {
+        console.log('goToMatch' );
+        
+        console.log('username: ' ,username );
+        console.log('sala: ' ,sala );
+        socket.leave(sala);
+        console.log('emit goToMatch' );
+        
+        io.sockets.in(sala).emit('goToMatch');    
+
+        // io.sockets.in(lobby).emit('refreshSalas');    
+        // io.sockets.in(lobby).emit('refreshSala',{sala});    
         callback();
     });
     socket.on('refreshSala',({username,name,lobby}, callback) => {
