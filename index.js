@@ -12,7 +12,7 @@ const cors = require('cors')
 const {addUser, removeUser, getUser , getUsersInRoom} = require('./users.js');
 const {addUserLobby, removeUserLobby, getUserLobby , getUsersInLobby,addSalaLobby,getSalasInLobby} = require('./lobby.js');
 const { deleteAllUserLobby} = require('./data/userLobby.js');
-const {deleteSalasAll} = require('./data/Sala2');
+const {deleteSalasAll} = require('./data/sala2');
 
 const dataSalas = require('./data/sala');
 const Sala = require('./model/Sala');
