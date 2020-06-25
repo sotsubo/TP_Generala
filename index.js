@@ -127,6 +127,25 @@ io.on('connection',(socket)=>{
         callback();
     });
 
+    socket.on('envioDatos',({dados,puntos,sala}, callback) => {
+        console.log('envioDatos: ' ,sala )
+        // const {error, salon} = await addSalaLobby({id: socket.id,username, name,lobby,cantMaxUsers });
+        // if(error) return  callback(error);
+        console.log("envioDatos dados",dados);
+        console.log("envioDatos puntos",puntos);
+        
+        // socket.broadcast.to(lobby).emit('refreshSalas', getSalasInLobby());  
+        // salas= await getSalasInLobby()
+        // console.log("salas", salas); 
+        
+        
+        // socket.broadcast.to(lobby).emit('refreshSalas',{} );
+        // io.to(lobby).emit('refreshSalas',{} );
+        
+        io.sockets.in(sala.salaName).emit('envioDatos' ,{dados,puntos,sala});    
+        
+        callback();
+    });
 
     socket.on('crearSala',async({username,name,lobby,cantMaxUsers}, callback) => {
         console.log('crearSala: ' ,name )
@@ -210,7 +229,7 @@ io.on('connection',(socket)=>{
         
         console.log('username: ' ,username );
         console.log('sala: ' ,sala );
-        socket.leave(sala);
+        // socket.leave(sala);
         console.log('emit goToMatch' );
         
         io.sockets.in(sala).emit('goToMatch');    
