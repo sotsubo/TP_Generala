@@ -21,7 +21,10 @@ async function pushSala(req,res){
     if(error) return res.status(400).send(error.details[0].message);
     //Check if user exist
     const salaExist= await Sala.findOne({salaName: req.body.salaName, isActive:true});
-    if(salaExist) return res.status(400).send('Sala already exists');
+    if(salaExist) {
+        console.log('Sala  already exists');
+        return res.status(403).send('Sala already exists');
+    }
     //Hash passwods
     console.log("salaName: ",req.body.salaName)
     console.log("isActive: ",req.body.isActive)

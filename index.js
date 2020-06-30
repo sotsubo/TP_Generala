@@ -137,8 +137,8 @@ io.on('connection',(socket)=>{
         io.sockets.in(sala.salaName).emit('reciboDatos' ,{dados,puntos,sala});    
 
         callback();
+        
     });
-
     socket.on('crearSala',async({username,name,lobby,cantMaxUsers}, callback) => {
         console.log('crearSala: ' ,name )
         console.log("  lobby", lobby)
@@ -177,7 +177,10 @@ io.on('connection',(socket)=>{
         // console.log('sala.salaName: ' ,sala.salaName );
         // console.log('sala: ' ,sala );
         // console.log('emit refreshSala' );
+
         io.sockets.in(sala.salaName).emit('refreshSala',{sala});    
+        io.sockets.in(lobby).emit('refreshSalas'  );    
+
         socket.join(sala.salaName);
         callback();
     });
