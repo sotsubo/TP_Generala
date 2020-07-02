@@ -1,14 +1,14 @@
 // const connection = require("./connection");
-const UserLooby = require('../model/UserLobby');
+const UserConnect = require('../model/UserLobby');
 
 async function getUsersLobby(){
-    const collection= await UserLooby.find();
+    const collection= await UserConnect.find();
     return collection;
 }
 
 async function getUserLobby(userId){
     console.log("getUserLobby",userId)
-    const user= await UserLooby.findOne({userId: userId});
+    const user= await UserConnect.findOne({userId: userId});
     return user;
 }
 
@@ -20,7 +20,7 @@ async function pushUserLobby(usernama,userId){
     //Check if the sala exists
     // const nameExist= await Sala.findOne({name: name});
     // if(nameExist) return err='Sala already exists';
-    const user = new UserLooby ({
+    const user = new UserConnect ({
     userId: userId,
     usernama: usernama
     });
@@ -39,13 +39,13 @@ async function pushUserLobby(usernama,userId){
 
 async function deleteUserLobby(userId){
     console.log("deleteUserLobby" ,userId)
-    const result= await UserLooby.deleteOne({userId: userId});
+    const result= await UserConnect.deleteOne({userId: userId});
     return result;
 
 }
 async function deleteAllUserLobby(){
     console.log("deleteAllUserLobby" )
-    const result= await UserLooby.deleteMany({});
+    const result= await UserConnect.deleteMany({});
     return result;
 
 }
