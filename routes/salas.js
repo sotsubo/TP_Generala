@@ -12,14 +12,14 @@ router.get('/',verify, async function(req, res, next) {
 });
 
 
-router.get('/:id', async (req, res, next)=>{
+router.get('/:id',verify, async (req, res, next)=>{
     console.log('salaId' ,req.params.id);
     // res.send('algo')
     let sala = await dataSalas.getSala(req.params.id);
     res.send(sala);
 });
 
-router.post('/',async(req,res)=>{
+router.post('/',verify,async(req,res)=>{
 
     let result = await dataSalas.pushSala(req,res
     );
@@ -64,7 +64,7 @@ router.post('/',async(req,res)=>{
 
 
 
-router.put('/:id', async (req, res, next)=>{
+router.put('/:id',async (req, res, next)=>{
     console.log("update sala")
     let result = await dataSalas.updateSala(req, res
     );
@@ -72,7 +72,7 @@ router.put('/:id', async (req, res, next)=>{
     // res.send(result)
 });
 
-router.delete('/:id', async (req, res, next)=>{
+router.delete('/:id', verify,async (req, res, next)=>{
     let result = await dataSalas.deleteSala(req.params.id);
     res.send(result);
 });

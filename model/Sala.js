@@ -26,6 +26,9 @@ const salaSchema =new mongoose.Schema({
                     type: String,
                     
                 },
+                active: {
+                    type: Boolean
+                },
                 isWinner: {
                     type: Boolean
                 }
@@ -50,7 +53,7 @@ const salaSchema =new mongoose.Schema({
         type: Number,
         // required: true,
         max: 4,
-        min:2
+        min: 2
 
 
     }

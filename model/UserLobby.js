@@ -13,4 +13,4 @@ const UserLobbySchema =new mongoose.Schema({
 
 })
 
-module.exports = mongoose.model('UserLooby', UserLobbySchema); 
+module.exports = mongoose.model('UserConnect', UserLobbySchema); 
