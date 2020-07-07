@@ -7,12 +7,6 @@ const verify = require('./verifyToken');
 const {userLobbyValidation}=require('../validation');
 
 
-/* GET salas activas listing. */
-// router.get('/', async function(req, res, next) {
-//   let salas = await dataSalas.getSalas();
-//   res.send(salas);
-// });
-// /* GET usersLobby activas listing. */
 router.get('/', async function(req, res, next) {
   let usersLobby = await dataUserLobby.getUsersLobby();
   res.send(usersLobby);

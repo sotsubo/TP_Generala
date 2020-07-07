@@ -88,10 +88,6 @@ app.use((req, res, next) => {
 
 io.on('connection',(socket)=>{
     console.log('We have a new connection!!!');
-    //console.log(socket.id);
-    //console.log("llamo a getSalas y despues hago un emit");
-
-    //console.log(getSalasInLobby());
     console.log("connection socket", socket.id);
     
 
@@ -128,12 +124,6 @@ io.on('connection',(socket)=>{
     });
 
     socket.on('envioDatos',({dados,puntos,sala,salaName}, callback) => {
-        // console.log('envioDatos: ' ,sala )
-        // console.log("envioDatos dados",dados);
-        // console.log("envioDatos puntos",puntos);
-        // console.log('sala.salaName: ' ,sala.salaName )
-        // console.log("envioDatos socket", socket.id);
-        // console.log('salaName: ' ,salaName )
         io.sockets.in(sala.salaName).emit('reciboDatos' ,{dados,puntos,sala});    
 
         callback();
@@ -141,25 +131,14 @@ io.on('connection',(socket)=>{
     });
     socket.on('crearSala',async({username,name,lobby,cantMaxUsers}, callback) => {
         console.log('crearSala: ' ,name )
-        console.log("  lobby", lobby)
         socket.join(name);
-        console.log("crearSala socket", socket.id);
-        console.log("llamo a getSalas y despues hago un emit refreshSalas");
         io.sockets.in(lobby).emit('refreshSalas' ,{});    
-        console.log("despues refreshSalas");
         socket.join(lobby);
         socket.emit('refreshSalas',  {} );    
 
       callback();
     });
-    socket.on('recibi',({sala,lobby}, callback) => {
-        console.log('a: ' ,sala );
-        console.log('b: ' ,lobby );
-
-
-        callback(); 
-    });
-
+    
 
     socket.on('getSalas',({username,lobby}, callback) => {
         console.log('getSalas' );
@@ -172,12 +151,7 @@ io.on('connection',(socket)=>{
 
 
     socket.on('joinSala',({username,sala,lobby}, callback) => {
-        // console.log('joinSala' );
-        // console.log('username: ' ,username );
-        // console.log('sala.salaName: ' ,sala.salaName );
-        // console.log('sala: ' ,sala );
-        // console.log('emit refreshSala' );
-
+    
         io.sockets.in(sala.salaName).emit('refreshSala',{sala});    
         io.sockets.in(lobby).emit('refreshSalas'  );    
 
@@ -185,47 +159,22 @@ io.on('connection',(socket)=>{
         callback();
     });
     socket.on('joinMatch',({username,sala,lobby}, callback) => {
-        console.log('joinMatch' );
-        
-        console.log('username: ' ,username );
-        console.log('sala.salaName: ' ,sala.salaName );
-        console.log('sala: ' ,sala );
-        console.log("joinMatch socket", socket.id);
-
-        // io.sockets.in(lobby).emit('refreshSalas');    
-        // io.sockets.in(lobby).emit('refreshSala',{sala});    
         socket.join(sala.salaName);
         callback();
     });
     
     socket.on('leftSala',({username,sala,lobby}, callback) => {
-        console.log('leftSala' );
-        
-        console.log('username: ' ,username );
-        console.log('sala.salaName: ' ,sala.salaName );
-        console.log('sala: ' ,sala );
-        console.log('emit refreshSala' );
         socket.leave(sala);
 
         io.sockets.in(sala.salaName).emit('refreshSala',{sala});    
         io.sockets.in(lobby).emit('refreshSalas'  );    
-
-        // io.sockets.in(lobby).emit('refreshSalas');    
-        // io.sockets.in(lobby).emit('refreshSala',{sala});    
-        callback();
+    callback();
     });
+
     socket.on('goToMatch',({username,sala,lobby}, callback) => {
         console.log('goToMatch' );
-        
-        console.log('username: ' ,username );
         console.log('sala: ' ,sala );
-        // socket.leave(sala);
-        console.log('emit goToMatch' );
-        
         io.sockets.in(sala).emit('goToMatch');    
-
-        // io.sockets.in(lobby).emit('refreshSalas');    
-        // io.sockets.in(lobby).emit('refreshSala',{sala});    
         callback();
     });
     socket.on('refreshSala',({username,name,lobby}, callback) => {
@@ -235,15 +184,6 @@ io.on('connection',(socket)=>{
         console.log('name: ' ,name );
         io.sockets.in(lobby).emit('refreshSalas'  );    
         
-        // const {error, user} = addUser({id: socket.id, name , room});
-        
-        // if(error) return  callback(error);
-        
-        // socket.emit('message',{user:'admin' , text:` ${user.name} , welcome to the room ${user.room}` });
-
-        // socket.broadcast.to(user.room).emit('message' ,{user: 'admin', text: `${user.name} has joined!`});
-        // socket.join(user.room);
-        // io.to(user.room).emit('roomData',{room: user.room , users: getUsersInRoom(user.room)});        
         callback();
     });
 
